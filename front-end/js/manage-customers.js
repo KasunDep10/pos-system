@@ -1,13 +1,3 @@
-/* for(let i = 0; i < 20; i++){
-    const fakeRow = $("#tbl-customers tbody tr:last-child").clone();
-    const newId = +fakeRow.find("td:first-child").text().replace('C', '') + 1
-    fakeRow.find("td:first-child").text(`C${newId.toString().padStart(3, '0')}`);
-    $("#tbl-customers tbody").append(fakeRow);
-}
-
-const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
-const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))*/
-
 
 const tbodyElm = $('#tbl-customers tbody');
 const modalElm = $('#new-customer-modal');
