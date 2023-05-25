@@ -1,0 +1,29 @@
+body {
+    min-height: 100vh;
+    display: flex;
+}
+
+.bi {
+    vertical-align: -.125em;
+    fill: currentColor;
+}
+
+nav {
+    position: sticky;
+    align-self: flex-start;
+    top: 0;
+    height: 100vh;
+}
+
+html:not(html[data-bs-theme="dark"]) nav {
+    background-color: #f8f9fa;
+    border-right: 1px solid lightgray;
+}
+
+html[data-bs-theme="dark"] nav{
+    border-right: 1px solid rgb(85, 85, 85);
+}
+
+main {
+    flex-grow: 1;
+}
