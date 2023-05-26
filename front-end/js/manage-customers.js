@@ -1,3 +1,4 @@
+import {showToast} from "./alertDisplay";
 
 const tbodyElm = $('#tbl-customers tbody');
 const modalElm = $('#new-customer-modal');
@@ -154,7 +155,7 @@ function resetForm(clearData){
 
 
 
-function showToast(toastType, header, message){
+/*function showToast(toastType, header, message){
     const toast = $('#toast .toast');
     toast.removeClass('text-bg-success text-bg-warning text-bg-danger')
     switch(toastType){
@@ -172,7 +173,7 @@ function showToast(toastType, header, message){
     $('#toast .toast-header > strong').text(header);
     $('#toast .toast-body').text(message);
     toast.toast('show');
-}
+}*/
 
 
 

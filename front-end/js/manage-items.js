@@ -1,4 +1,4 @@
-
+import {showToast} from "./alertDisplay";
 
 const tbodyElm = $('#tbl-items tbody');
 const modalElm = $('#new-item-modal');
@@ -121,7 +121,7 @@ function validateData(){
     if(!description){
         valid = invalidate(txtDescription, "Description can't be empty")
 
-    } else if(!/^[A-za-z0-9 ]+$/.test(description)){
+    } else if(!/^[A-Za-z0-9 _+/-]+$/.test(description)){
         valid = invalidate(txtDescription, "Invalid description")
     }
     return valid;
@@ -148,7 +148,7 @@ function resetForm(clearData){
 
 
 
-function showToast(toastType, header, message){
+/*function showToast(toastType, header, message){
     const toast = $('#toast .toast');
     toast.removeClass('text-bg-success text-bg-warning text-bg-danger')
     switch(toastType){
@@ -166,7 +166,7 @@ function showToast(toastType, header, message){
     $('#toast .toast-header > strong').text(header);
     $('#toast .toast-body').text(message);
     toast.toast('show');
-}
+}*/
 
 
 
