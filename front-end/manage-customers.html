@@ -91,12 +91,12 @@
                 data-bs-target="#new-customer-modal">New Customer</button>
         </section>
         <section class="p-2">
-            <input class="form-control text-center" type="text" placeholder="Search Customer">
+            <input id="txt-search" class="form-control text-center" type="text" placeholder="Search Customer">
         </section>
         <section class="p-2">
-            <table id="tbl-customers" class="table table-hover table-bordered">
+            <table id="tbl-customers" class="table table-striped table-hover table-bordered">
                 <thead class="table-light">
-                    <tr>
+                    <tr class="table-primary">
                         <th class="text-center">ID</th>
                         <th>Name</th>
                         <th class="d-none d-xl-table-cell">Address</th>
@@ -194,6 +194,7 @@
           </div>
         </div>
     </div>
+    <div id="progress-bar"></div>
 </body>
 
 </html>

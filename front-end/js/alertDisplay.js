@@ -1,3 +1,4 @@
+/*
 function showToast(toastType, header, message){
     const toast = $('#toast .toast');
     toast.removeClass('text-bg-success text-bg-warning text-bg-danger')
@@ -18,4 +19,4 @@ function showToast(toastType, header, message){
     toast.toast('show');
 }
 
-export {showToast};
+export {showToast};*/
