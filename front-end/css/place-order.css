@@ -61,3 +61,10 @@ main > section:first-child {
     color: red;
     cursor: pointer;
 }
+
+.out-of-stock {
+    background-color: #cf3805 !important;
+    color: white;
+    padding: 5px;
+    border-radius: 8px;
+}

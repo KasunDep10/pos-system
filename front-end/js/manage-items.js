@@ -10,17 +10,12 @@ const btnSave = $('#btn-save');
 const txtSearch = $('#txt-search');
 tbodyElm.empty();
 
-function formatItemCode(code){
-    return `I${code.toString().padStart(3, '0')}`;
-}
-
 modalElm.on('show.bs.modal', ()=>{
     resetForm(true);
-    txtCode.parent().hide();
-    setTimeout(()=>txtDescription.trigger('focus'),500)
+    setTimeout(()=>txtCode.trigger('focus'),500)
 });
 
-[txtDescription, txtPrice, txtQty].forEach(txtElm => $(txtElm).addClass('animate__animated'));
+[txtCode, txtDescription, txtPrice, txtQty].forEach(txtElm => $(txtElm).addClass('animate__animated'));
 
 btnSave.on('click', ()=>{
     if(!validateData()){
@@ -33,7 +28,7 @@ btnSave.on('click', ()=>{
     const code = txtCode.val().trim();
 
     let item = {
-        description, price, qty
+        code, description, price, qty
     };
     /* Todo: Send a request to the server to save the item*/
 
@@ -44,7 +39,7 @@ btnSave.on('click', ()=>{
     xhr.addEventListener('readystatechange', ()=>{
         if(xhr.readyState === 4){
 
-            [txtDescription, txtQty, txtPrice, btnSave].forEach(txt => txt.removeAttr('disabled'));
+            [txtCode, txtDescription, txtQty, txtPrice, btnSave].forEach(txt => txt.removeAttr('disabled'));
             $('#loader').css('visibility', 'hidden');
 
             if(xhr.status === 201){
@@ -74,7 +69,7 @@ btnSave.on('click', ()=>{
     /* 5. Okay time to send the request*/
     xhr.send(JSON.stringify(item));
 
-    [txtDescription, txtQty, txtPrice, btnSave].forEach(txt => txt.attr('disabled', 'true'));
+    [txtCode, txtDescription, txtQty, txtPrice, btnSave].forEach(txt => txt.attr('disabled', 'true'));
     $('#loader').css('visibility', 'visible');
 
 });
@@ -84,6 +79,7 @@ btnSave.on('click', ()=>{
 function validateData(){
     const price = +txtPrice.val().trim();
     const description = txtDescription.val().trim();
+    const code = txtCode.val().trim();
     let valid = true;
     resetForm();
 
@@ -100,6 +96,13 @@ function validateData(){
 
     } else if(!/^[A-Za-z0-9 _+/-]+$/.test(description)){
         valid = invalidate(txtDescription, "Invalid description")
+    }
+
+    if(!code){
+        valid = invalidate(txtCode, "Item Code can't be empty")
+
+    } else if(!/^\d+$/.test(code)){
+        valid = invalidate(txtCode, "Invalid Item Code")
     }
     return valid;
 }
@@ -244,7 +247,7 @@ function showProgress(xhr){
 
 tbodyElm.on('click', ".delete", (eventData)=> {
     /* XHR -> jQuery AJAX */
-    const code = +$(eventData.target).parents("tr").children("td:first-child").text().replace('I', '');
+    const code = +$(eventData.target).parents("tr").children("td:first-child").text();
     const xhr = new XMLHttpRequest();
     const jqxhr = $.ajax(`http://localhost:8080/pos/items/${code}`, {
         method: 'DELETE',

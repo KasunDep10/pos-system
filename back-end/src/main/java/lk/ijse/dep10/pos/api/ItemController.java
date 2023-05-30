@@ -46,16 +46,15 @@ public class ItemController {
         }
     }
 
-    @PatchMapping("/{id}")
-    public ResponseEntity<?> updateItem(@PathVariable("id") int itemCode, @RequestBody ItemDTO item){
+    @PatchMapping("/{code}")
+    public ResponseEntity<?> updateItem(@PathVariable("code") String itemCode, @RequestBody ItemDTO item){
         try(Connection connection = pool.getConnection()) {
             PreparedStatement stm = connection.prepareStatement
-                    ("UPDATE Item SET description=?, price=?, qty=? WHERE code=?",
-                            Statement.RETURN_GENERATED_KEYS);
+                    ("UPDATE Item SET description=?, price=?, qty=? WHERE code=?");
             stm.setString(1, item.getDescription());
             stm.setBigDecimal(2, item.getPrice());
             stm.setInt(3, item.getQty());
-            stm.setInt(4, itemCode);
+            stm.setString(4, itemCode);
             int affectedRows = stm.executeUpdate();
             if(affectedRows == 1){
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -76,8 +75,8 @@ public class ItemController {
     }
 
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteItem(@PathVariable("id") String itemCode){
+    @DeleteMapping("/{code}")
+    public ResponseEntity<?> deleteItem(@PathVariable("code") String itemCode){
 //        System.out.println("delete " + itemCode);
 
         try(Connection connection = pool.getConnection()) {
@@ -112,16 +111,16 @@ public class ItemController {
         }*/
         try(Connection connection = pool.getConnection()) {
             PreparedStatement stm = connection.prepareStatement
-                    ("INSERT INTO Item (description, price, qty) VALUES (?,?,?)",
-                            Statement.RETURN_GENERATED_KEYS);
-            stm.setString(1, item.getDescription());
-            stm.setBigDecimal(2, item.getPrice());
-            stm.setInt(3, item.getQty());
+                    ("INSERT INTO Item (code, description, price, qty) VALUES (?,?,?,?)");
+            stm.setString(1, item.getCode());
+            stm.setString(2, item.getDescription());
+            stm.setBigDecimal(3, item.getPrice());
+            stm.setInt(4, item.getQty());
             stm.executeUpdate();
-            ResultSet generatedKeys = stm.getGeneratedKeys();
+            /*ResultSet generatedKeys = stm.getGeneratedKeys();
             generatedKeys.next();
             int id = generatedKeys.getInt(1);
-            item.setCode(id + "");
+            item.setCode(id + "");*/
             return new ResponseEntity<>(item, HttpStatus.CREATED);
 
         } catch (SQLException e) {
@@ -161,5 +160,8 @@ public class ItemController {
             return new ResponseEntity<>(new ResponseErrorDTO(500, e.getMessage()),
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
+
+
+
     }
 }
