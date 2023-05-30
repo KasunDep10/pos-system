@@ -48,14 +48,13 @@ btnSave.on('click', ()=>{
             $('#loader').css('visibility', 'hidden');
 
             if(xhr.status === 201){
-                showToast('success', 'Success', 'Customer has been saved');
                 customer = JSON.parse(xhr.responseText);
-
                 /* For successful response*/
+
                 getCustomers();
                 resetForm(true);
                 txtName.trigger('focus');
-                showToast('Success', 'Saved', 'Customer has been saved successfully');
+                showToast('success', 'Success', 'Customer has been saved');
 
             } else {
                 showToast('error', 'Failed to Save', 'Failed save the customer');

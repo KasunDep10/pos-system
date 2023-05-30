@@ -22,6 +22,30 @@ public class ItemController {
     @Autowired
     private BasicDataSource pool;
 
+    @GetMapping("/{code}")
+    public ResponseEntity<?> getItem(@PathVariable String code){
+        try(Connection connection = pool.getConnection()) {
+            PreparedStatement stm = connection.prepareStatement("SELECT * FROM Item WHERE code=?");
+            stm.setString(1, code);
+            ResultSet rst = stm.executeQuery();
+            if(rst.next()){
+                String description = rst.getString("description");
+                BigDecimal price = rst.getBigDecimal("price").setScale(2);
+                int qty = rst.getInt("qty");
+                ItemDTO item = new ItemDTO(code, description, price, qty);
+                return new ResponseEntity<>(item, HttpStatus.OK);
+            } else {
+                ResponseErrorDTO error = new ResponseErrorDTO(404, "Item not found");
+                return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            ResponseErrorDTO error = new ResponseErrorDTO(404, "Item not found");
+            return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @PatchMapping("/{id}")
     public ResponseEntity<?> updateItem(@PathVariable("id") int itemCode, @RequestBody ItemDTO item){
         try(Connection connection = pool.getConnection()) {
@@ -81,11 +105,11 @@ public class ItemController {
 
     @PostMapping
     public ResponseEntity<?> saveItem(@RequestBody ItemDTO item){
-        try {
+        /*try {
             Thread.sleep(2000);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
-        }
+        }*/
         try(Connection connection = pool.getConnection()) {
             PreparedStatement stm = connection.prepareStatement
                     ("INSERT INTO Item (description, price, qty) VALUES (?,?,?)",
@@ -97,7 +121,7 @@ public class ItemController {
             ResultSet generatedKeys = stm.getGeneratedKeys();
             generatedKeys.next();
             int id = generatedKeys.getInt(1);
-            item.setCode(id);
+            item.setCode(id + "");
             return new ResponseEntity<>(item, HttpStatus.CREATED);
 
         } catch (SQLException e) {
@@ -123,7 +147,7 @@ public class ItemController {
             ResultSet rst = stm.executeQuery();
             List<ItemDTO> ItemList = new ArrayList<>();
             while (rst.next()) {
-                int id = rst.getInt("code");
+                String id = rst.getString("code");
                 String description = rst.getString("description");
                 BigDecimal price = rst.getBigDecimal("price");
                 int qty = rst.getInt("qty");

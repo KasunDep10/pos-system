@@ -21,6 +21,7 @@ public class CustomerController {
     @Autowired
     private BasicDataSource pool;
 
+
     @PatchMapping("/{id}")
     public ResponseEntity<?> updateCustomer(@PathVariable("id") int customerId, @RequestBody CustomerDTO customer){
         try(Connection connection = pool.getConnection()) {
