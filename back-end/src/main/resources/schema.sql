@@ -5,6 +5,9 @@ CREATE TABLE IF NOT EXISTS Customer (
                     contact VARCHAR(20) NOT NULL
 );
 
+ALTER TABLE Customer
+    ADD CONSTRAINT uk_contact UNIQUE (contact);
+
 CREATE TABLE IF NOT EXISTS Item (
                     code VARCHAR(50) PRIMARY KEY,
                     description VARCHAR(200) NOT NULL,
@@ -30,7 +33,7 @@ CREATE TABLE IF NOT EXISTS `order_details` (
 );
 
 CREATE TABLE IF NOT EXISTS order_customer (
-                  order_id INT PRIMARY KEY ,
+                  order_id INT PRIMARY KEY,
                   customer_id INT NOT NULL,
                   CONSTRAINT fk_order_customer_order FOREIGN KEY (order_id) REFERENCES `order`(id),
                   CONSTRAINT fk_order_customer_customer FOREIGN KEY (customer_id) REFERENCES Customer(id)

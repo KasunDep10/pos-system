@@ -1,6 +1,8 @@
 import {DateTimeFormatter, LocalDateTime} from '../node_modules/@js-joda/core/dist/js-joda.esm.js';
 import {Big} from '../node_modules/big.js/big.mjs';
 import {Cart} from "./cart.js";
+import {showProgress, showToast} from "./main.js";
+import {getBillDesignHTML} from "./bill-design.js";
 
 /* Module Level Variables, Constants */
 
@@ -13,6 +15,7 @@ const netTotalElm = $("#net-total");
 const itemInfoElm = $("#item-info");
 const customerNameElm = $("#customer-name");
 const frmOrder = $("#frm-order");
+const btnPlaceOrder = $("#btn-place-order");
 const txtCustomer = $("#txt-customer");
 const txtCode = $("#txt-code");
 const txtQty = $("#txt-qty");
@@ -21,15 +24,18 @@ let item = null;
 let socket = null;
 let cart = new Cart((total)=> netTotalElm.text(formatPrice(total)));
 
-/* Initialization Logic */
 
+
+/* Initialization Logic */
 setDateTime();
 tbodyElm.empty();
 socket = new WebSocket(`${WS_API_BASE_URL}/customers-ws`);
 updateOrderDetails();
 
-/* Event Handlers & Timers */
 
+
+
+/* Event Handlers & Timers */
 setInterval(setDateTime, 1000);
 $("#btn-clear-customer").on('click', () => {
     customer = null;
@@ -39,23 +45,30 @@ $("#btn-clear-customer").on('click', () => {
     txtCustomer.removeClass("is-invalid");
     txtCustomer.trigger("focus");
 });
+
 socket.addEventListener('message', (eventData) => {
     customer = JSON.parse(eventData.data);
     cart.setCustomer(customer);
     customerNameElm.text(customer.name);
 });
+
 txtCustomer.on('input', () => findCustomer());
+
 txtCustomer.on('blur', () => {
     if (txtCustomer.val() && !customer) {
         txtCustomer.addClass("is-invalid");
     }
 });
+
 txtCode.on('input', () => {
     itemInfoElm.addClass('d-none');
     frmOrder.addClass('d-none');
-})
+});
+
 txtCode.on('change', () => findItem());
+
 txtQty.on('input', () => txtQty.removeClass('is-invalid'));
+
 frmOrder.on('submit', (eventData) => {
     eventData.preventDefault();
 
@@ -85,6 +98,7 @@ frmOrder.on('submit', (eventData) => {
     txtCode.trigger("focus");
     txtQty.val("1");
 });
+
 tbodyElm.on('click', 'svg.delete', (eventData) => {
     const trElm = $(eventData.target).parents("tr");
     const code = trElm.find("td:first-child .code").text();
@@ -98,7 +112,51 @@ tbodyElm.on('click', 'svg.delete', (eventData) => {
     }
 });
 
+btnPlaceOrder.on('click', ()=> placeOrder());
+
+
+
+
 /* Functions */
+
+function placeOrder(){
+    if (!cart.itemList.length) return;
+
+    cart.dateTime = orderDateTimeElm.text();
+    btnPlaceOrder.attr('disabled', true);
+    const xhr = new XMLHttpRequest();
+
+    const jqxhr = $.ajax(`${REST_API_BASE_URL}/orders`, {
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(cart),
+        xhr: ()=> xhr
+    });
+
+    showProgress(xhr);
+
+    jqxhr.done((orderId)=> {
+        printBill(orderId);
+
+        cart.clear();
+        $("#btn-clear-customer").trigger('click');
+        txtCode.val("");
+        txtCode.trigger("input");
+        tbodyElm.empty();
+        tFootElm.show();
+        showToast('success', 'Success', 'Order has been placed successfully');
+    });
+    jqxhr.fail(()=> {
+        showToast('error', 'Failed', "Failed to place the order, try again!");
+    });
+    jqxhr.always(()=> btnPlaceOrder.removeAttr('disabled'));
+}
+
+function printBill(orderId){
+    // window.open("", `Order ${orderId}`)
+    const billWindow = open("", `_blank`, "popup=true, width=200");
+    billWindow.document.write(getBillDesignHTML(cart, orderId));
+}
 
 function updateOrderDetails() {
     const id = cart.customer?.id.toString().padStart(3, '0');
@@ -197,7 +255,7 @@ function findCustomer() {
     if (socket.readyState === socket.OPEN) socket.send(idOrContact);
 }
 
-function formatPrice(price) {
+export function formatPrice(price) {
     return new Intl.NumberFormat('en-LK', {
         style: 'currency',
         currency: 'LKR',
@@ -206,7 +264,7 @@ function formatPrice(price) {
     }).format(price);
 }
 
-function formatNumber(number) {
+export function formatNumber(number) {
     return new Intl.NumberFormat('en-LK', {
         style: 'decimal',
         minimumFractionDigits: 2,

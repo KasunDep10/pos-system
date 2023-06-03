@@ -60,4 +60,11 @@ export class Cart {
     #updateOrder(){
         localStorage.setItem("order", JSON.stringify(this));
     }
+
+    clear(){
+        this.customer = null;
+        this.itemList = [];
+        this.#updateOrder();
+        this.subscriber(this.getTotal());
+    }
 }

@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lk.ijse.dep10.pos.dto.CustomerDTO;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
