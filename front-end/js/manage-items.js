@@ -1,4 +1,5 @@
-// import {showToast} from "./alertDisplay";
+import {showToast, showProgress} from "./main.js";
+import {formatPrice} from "./place-order.js";
 
 const tbodyElm = $('#tbl-items tbody');
 const modalElm = $('#new-item-modal');
@@ -14,6 +15,10 @@ modalElm.on('show.bs.modal', ()=>{
     resetForm(true);
     setTimeout(()=>txtCode.trigger('focus'),500)
 });
+
+
+getItems();
+txtSearch.on('input', ()=> getItems());
 
 [txtCode, txtDescription, txtPrice, txtQty].forEach(txtElm => $(txtElm).addClass('animate__animated'));
 
@@ -75,6 +80,28 @@ btnSave.on('click', ()=>{
 });
 
 
+tbodyElm.on('click', ".delete", (eventData)=> {
+    /* XHR -> jQuery AJAX */
+    const code = +$(eventData.target).parents("tr").children("td:first-child").text();
+    const xhr = new XMLHttpRequest();
+    const jqxhr = $.ajax(`http://localhost:8080/pos/items/${code}`, {
+        method: 'DELETE',
+        xhr: ()=> xhr           // This is a hack to obtain the xhr that is used by jquery
+    });
+    showProgress(xhr);
+
+    jqxhr.done(()=> {
+        showToast('success', 'Deleted', 'Item has been deleted successfully');
+        $(eventData.target).tooltip('dispose');
+        getItems();
+    });
+    jqxhr.fail(()=> {
+        showToast('error', 'Failed', "Failed to delete the item, try again!");
+    });
+});
+
+
+
 
 function validateData(){
     const price = +txtPrice.val().trim();
@@ -108,22 +135,11 @@ function validateData(){
 }
 
 
-
 function invalidate(txt, msg){
     setTimeout(()=>txt.addClass('is-invalid animate__shakeX'),0);
     txt.trigger('select');
     txt.next().text(msg);
     return false;
-}
-
-
-function formatPrice(price){
-    return new Intl.NumberFormat('en-lk', {
-        style:'currency',
-        currency: 'LKR',
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-    }).format(price)
 }
 
 
@@ -134,29 +150,6 @@ function resetForm(clearData){
     })
 
 }
-
-
-
-function showToast(toastType, header, message){
-    const toast = $('#toast .toast');
-    toast.removeClass('text-bg-success text-bg-warning text-bg-danger')
-    switch(toastType){
-        case 'success':
-            toast.addClass('text-bg-success');
-            break;
-        case 'warning':
-            toast.addClass('text-bg-warning');
-            break;
-        case 'error':
-            toast.addClass('text-bg-danger');
-            break;
-        default:
-    }
-    $('#toast .toast-header > strong').text(header);
-    $('#toast .toast-body').text(message);
-    toast.toast('show');
-}
-
 
 
 function getItems(){
@@ -224,43 +217,3 @@ function getItems(){
 
     xhr.send();
 }
-
-getItems();
-txtSearch.on('input', ()=> getItems());
-
-
-function showProgress(xhr){
-    const progressBar = $('#progress-bar');
-    xhr.addEventListener('loadstart', ()=> progressBar.width('5%'));
-    xhr.addEventListener('progress', (eventData)=>{
-        const downloadedBytes = eventData.loaded;
-        const totalBytes = eventData.total;
-        const progress = (downloadedBytes/ totalBytes) * 100;
-        progressBar.width(`${progress}%`);
-    });
-    xhr.addEventListener('loadend', ()=>{
-        progressBar.width('100%');
-        setTimeout(()=> progressBar.width('0%'), 500);
-    });
-}
-
-
-tbodyElm.on('click', ".delete", (eventData)=> {
-    /* XHR -> jQuery AJAX */
-    const code = +$(eventData.target).parents("tr").children("td:first-child").text();
-    const xhr = new XMLHttpRequest();
-    const jqxhr = $.ajax(`http://localhost:8080/pos/items/${code}`, {
-        method: 'DELETE',
-        xhr: ()=> xhr           // This is a hack to obtain the xhr that is used by jquery
-    });
-    showProgress(xhr);
-
-    jqxhr.done(()=> {
-        showToast('success', 'Deleted', 'Item has been deleted successfully');
-        $(eventData.target).tooltip('dispose');
-        getItems();
-    });
-    jqxhr.fail(()=> {
-        showToast('error', 'Failed', "Failed to delete the item, try again!");
-    });
-});
