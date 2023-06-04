@@ -1,4 +1,6 @@
-`Front-End
+Create README file for web application pos system. When create the pos system, I used following technologies and tools.
+
+For Front-End
 - HTML5
 - CSS3
 - ECMAScript
@@ -20,7 +22,7 @@
 - CSS Loaders
 - Client-side Reporting
 
-Back-End
+For Back-End
 - Java 11
 - Java SE 11
 - Spring Framework (Spring Web MVC)
@@ -29,5 +31,13 @@ Back-End
 - Lombok
 - Jackson
 
-Database
+As a Database
 - MySQL`
+
+This pos system has following features.
+- Save, update and delete Customer
+- Save, update and delete Item
+- Order placed
+- Search orders
+- Bill printing
+- time wise income
