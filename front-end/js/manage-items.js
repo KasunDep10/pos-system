@@ -1,9 +1,9 @@
-import {showToast, showProgress} from "./main.js";
 import {formatPrice} from "./place-order.js";
+import {showProgress, showToast} from "./main.js";
 
 const tbodyElm = $('#tbl-items tbody');
 const modalElm = $('#new-item-modal');
-const txtCode = $('#txt-code');
+const txtCode = $('#txt-item-code');
 const txtDescription = $('#txt-description');
 const txtQty = $('#txt-qty');
 const txtPrice = $('#txt-price');
@@ -13,6 +13,8 @@ tbodyElm.empty();
 
 modalElm.on('show.bs.modal', ()=>{
     resetForm(true);
+    txtCode.removeAttr('disabled');
+    btnSave.text("Save Item");
     setTimeout(()=>txtCode.trigger('focus'),500)
 });
 
@@ -21,6 +23,31 @@ getItems();
 txtSearch.on('input', ()=> getItems());
 
 [txtCode, txtDescription, txtPrice, txtQty].forEach(txtElm => $(txtElm).addClass('animate__animated'));
+
+
+
+
+
+tbodyElm.on('click', ".edit", (eventData)=> {
+    let code = $(eventData.target).parents('tr').children('td:first-child').text();
+    let description = $(eventData.target).parents('tr').children('td:nth-child(2)').text();
+    let price = $(eventData.target).parents('tr').children('td:nth-child(3)').text();
+    let qty = $(eventData.target).parents('tr').children('td:nth-child(4)').text();
+    price = price.replace('LKR', '').replace(',', '');
+    $('#btn-new-item').trigger('click');
+    txtCode.prop('disabled', 'true');
+    txtCode.val(code);
+    setTimeout(()=>txtDescription.trigger('focus'),500)
+    txtDescription.val(description);
+    txtQty.val(qty);
+    txtPrice.val(price);
+    btnSave.text('Update Item');
+});
+
+
+
+
+
 
 btnSave.on('click', ()=>{
     if(!validateData()){
@@ -47,24 +74,37 @@ btnSave.on('click', ()=>{
             [txtCode, txtDescription, txtQty, txtPrice, btnSave].forEach(txt => txt.removeAttr('disabled'));
             $('#loader').css('visibility', 'hidden');
 
-            if(xhr.status === 201){
-                item = JSON.parse(xhr.responseText);
+            if(xhr.status === 201) {
+                // item = JSON.parse(xhr.responseText);
                 /* For successful response*/
 
                 getItems();
                 resetForm(true);
-                txtDescription.trigger('focus');
+                txtCode.trigger('focus');
                 showToast('success', 'Success', 'Item has been saved');
 
-
-            } else {
+            } else if(xhr.status !== 204) {
                 showToast('error', 'Failed to Save', 'Failed save the item');
+            }
+
+            if(xhr.status === 204){
+                getItems();
+                resetForm(true);
+                txtCode.trigger('focus');
+                showToast('success', 'Success', 'Item has been Updated');
+            } else if(xhr.status !== 201) {
+                showToast('error', 'Failed to Update', 'Failed update the item');
             }
         }
     })
 
     /* 3. Let's open the request*/
-    xhr.open('POST', 'http://localhost:8080/pos/items', true);
+    if(btnSave.text() === "Save Item"){
+        xhr.open('POST', 'http://localhost:8080/pos/items', true);
+    } else {
+        xhr.open('PATCH', `http://localhost:8080/pos/items/${code}`, true);
+
+    }
 
     /* 4. Let's set some headers*/
     xhr.setRequestHeader('Content-Type', 'application/json');
@@ -125,12 +165,12 @@ function validateData(){
         valid = invalidate(txtDescription, "Invalid description")
     }
 
-    if(!code){
+    /*if(!code){
         valid = invalidate(txtCode, "Item Code can't be empty")
 
     } else if(!/^\d+$/.test(code)){
         valid = invalidate(txtCode, "Invalid Item Code")
-    }
+    }*/
     return valid;
 }
 
@@ -169,7 +209,7 @@ function getItems(){
                         <td class="contact text-center">${item.qty}</td>
                         <td>
                             <div class="actions d-flex gap-3 justify-content-center">
-                                <svg data-bs-toggle="tooltip" data-bs-title="Edit Item" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                                <svg data-bs-target="#new-item-modal" data-bs-toggle="tooltip" data-bs-title="Edit Item" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
                                     class="bi bi-pencil-square edit" viewBox="0 0 16 16">
                                     <path
                                         d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />

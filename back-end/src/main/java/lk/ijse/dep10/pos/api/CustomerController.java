@@ -26,8 +26,7 @@ public class CustomerController {
     public ResponseEntity<?> updateCustomer(@PathVariable("id") int customerId, @RequestBody CustomerDTO customer){
         try(Connection connection = pool.getConnection()) {
             PreparedStatement stm = connection.prepareStatement
-                    ("UPDATE Customer SET name=?, address=?, contact=? WHERE id=?",
-                            Statement.RETURN_GENERATED_KEYS);
+                    ("UPDATE Customer SET name=?, address=?, contact=? WHERE id=?");
             stm.setString(1, customer.getName());
             stm.setString(2, customer.getAddress());
             stm.setString(3, customer.getContact());

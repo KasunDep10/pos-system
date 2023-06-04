@@ -1,5 +1,4 @@
-// import {showToast} from "./alertDisplay";
-import {showProgress} from "./main.js";
+import {showProgress, showToast} from "./main.js";
 
 const tbodyElm = $('#tbl-customers tbody');
 const modalElm = $('#new-customer-modal');
@@ -11,24 +10,68 @@ const btnSave = $('#btn-save');
 const txtSearch = $('#txt-search');
 tbodyElm.empty();
 
+getCustomers();
 function formatCustomerId(id){
     return `C${id.toString().padStart(3, '0')}`;
+
 }
+
+txtSearch.on('input', ()=> getCustomers());
 
 modalElm.on('show.bs.modal', ()=>{
     resetForm(true);
     txtId.parent().hide();
+    btnSave.text("Save Customer");
     setTimeout(()=>txtName.trigger('focus'),500)
 });
 
 [txtName, txtContact, txtAddress].forEach(txtElm => $(txtElm).addClass('animate__animated'));
+
+
+tbodyElm.on('click', ".edit", (evt)=>{
+    let id = $(evt.target).parents('tr').children('td:first-child').text();
+    let name = $(evt.target).parents('tr').children('td:nth-child(2)').text();
+    let address = $(evt.target).parents('tr').children('td:nth-child(3)').text();
+    let contact = $(evt.target).parents('tr').children('td:nth-child(4)').text();
+    $('#btn-new-customer').trigger('click');
+    txtId.val(id);
+    txtId.prop('disabled', 'true');
+    txtId.parent().show();
+    setTimeout(()=>txtName.trigger('focus'),500)
+    txtName.val(name);
+    txtAddress.val(address);
+    txtContact.val(contact);
+    btnSave.text('Update Customer');
+})
+
+
+tbodyElm.on('click', ".delete", (eventData)=> {
+    /* XHR -> jQuery AJAX */
+    const id = +$(eventData.target).parents("tr").children("td:first-child").text().replace('C', '');
+    const xhr = new XMLHttpRequest();
+    const jqxhr = $.ajax(`http://localhost:8080/pos/customers/${id}`, {
+        method: 'DELETE',
+        xhr: ()=> xhr           // This is a hack to obtain the xhr that is used by jquery
+    });
+    showProgress(xhr);
+
+    jqxhr.done(()=> {
+        showToast('success', 'Deleted', 'Customer has been deleted successfully');
+        $(eventData.target).tooltip('dispose');
+        getCustomers();
+    });
+    jqxhr.fail(()=> {
+        showToast('error', 'Failed', "Failed to delete the customer, try again!");
+    });
+});
+
 
 btnSave.on('click', ()=>{
     if(!validateData()){
         return;
     }
 
-    const id = txtId.val().trim();
+    const id = +txtId.val().trim().replace('C', '');
     const name = txtName.val().trim();
     const address = txtAddress.val().trim();
     const contact = txtContact.val().trim();
@@ -49,7 +92,7 @@ btnSave.on('click', ()=>{
             $('#loader').css('visibility', 'hidden');
 
             if(xhr.status === 201){
-                customer = JSON.parse(xhr.responseText);
+                // customer = JSON.parse(xhr.responseText);
                 /* For successful response*/
 
                 getCustomers();
@@ -57,14 +100,31 @@ btnSave.on('click', ()=>{
                 txtName.trigger('focus');
                 showToast('success', 'Success', 'Customer has been saved');
 
-            } else {
+            } else if(xhr.status !== 204) {
                 showToast('error', 'Failed to Save', 'Failed save the customer');
+            }
+
+            if(xhr.status === 204){
+                getCustomers();
+                resetForm(true);
+                txtId.parent().hide();
+                btnSave.text('Save Customer');
+                txtName.trigger('focus');
+                showToast('success', 'Success', 'Customer has been updated');
+
+            } else if(xhr.status !== 201) {
+                showToast('error', 'Failed to Update', 'Failed update the customer');
             }
         }
     })
 
     /* 3. Let's open the request*/
-    xhr.open('POST', 'http://localhost:8080/pos/customers', true);
+    if(btnSave.text() === "Save Customer"){
+        xhr.open('POST', 'http://localhost:8080/pos/customers', true);
+    } else {
+        xhr.open('PATCH', `http://localhost:8080/pos/customers/${id}`, true);
+
+    }
 
     /* 4. Let's set some headers*/
     xhr.setRequestHeader('Content-Type', 'application/json');
@@ -78,6 +138,7 @@ btnSave.on('click', ()=>{
 
 
 });
+
 
 
 
@@ -112,14 +173,12 @@ function validateData(){
 }
 
 
-
 function invalidate(txt, msg){
     setTimeout(()=>txt.addClass('is-invalid animate__shakeX'),0);
     txt.trigger('select');
     txt.next().text(msg);
     return false;
 }
-
 
 
 function resetForm(clearData){
@@ -129,7 +188,6 @@ function resetForm(clearData){
     })
 
 }
-
 
 
 function getCustomers(){
@@ -197,27 +255,3 @@ function getCustomers(){
 
     xhr.send();
 }
-
-getCustomers();
-txtSearch.on('input', ()=> getCustomers());
-
-
-tbodyElm.on('click', ".delete", (eventData)=> {
-    /* XHR -> jQuery AJAX */
-    const id = +$(eventData.target).parents("tr").children("td:first-child").text().replace('C', '');
-    const xhr = new XMLHttpRequest();
-    const jqxhr = $.ajax(`http://localhost:8080/pos/customers/${id}`, {
-        method: 'DELETE',
-        xhr: ()=> xhr           // This is a hack to obtain the xhr that is used by jquery
-    });
-    showProgress(xhr);
-
-    jqxhr.done(()=> {
-        showToast('success', 'Deleted', 'Customer has been deleted successfully');
-        $(eventData.target).tooltip('dispose');
-        getCustomers();
-    });
-    jqxhr.fail(()=> {
-        showToast('error', 'Failed', "Failed to delete the customer, try again!");
-    });
-});

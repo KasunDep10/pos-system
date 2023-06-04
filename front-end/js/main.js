@@ -1,4 +1,3 @@
-/* global bootstrap: false */
 (() => {
     'use strict'
     const tooltipTriggerList = Array.from(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
@@ -46,4 +45,4 @@ function showToast(toastType, header, message){
     toast.toast('show');
 }
 
-export {showProgress, showToast};
+export {showToast, showProgress};
