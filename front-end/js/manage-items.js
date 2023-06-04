@@ -165,12 +165,12 @@ function validateData(){
         valid = invalidate(txtDescription, "Invalid description")
     }
 
-    /*if(!code){
+    if(!code){
         valid = invalidate(txtCode, "Item Code can't be empty")
 
     } else if(!/^\d+$/.test(code)){
         valid = invalidate(txtCode, "Invalid Item Code")
-    }*/
+    }
     return valid;
 }
 
@@ -193,6 +193,8 @@ function resetForm(clearData){
 
 
 function getItems(){
+    let size = 0;
+
     const xhr = new XMLHttpRequest();
 
     xhr.addEventListener('readystatechange', ()=> {
@@ -200,6 +202,7 @@ function getItems(){
             if (xhr.status === 200){
                 tbodyElm.empty();
                 const itemList = JSON.parse(xhr.responseText);
+                size = itemList.length;
                 itemList.forEach(item => {
                     tbodyElm.append(`
                     <tr>
@@ -256,4 +259,6 @@ function getItems(){
     xhr.addEventListener('loadend', ()=> tfoot.text('No item records'));
 
     xhr.send();
+
+    return size;
 }

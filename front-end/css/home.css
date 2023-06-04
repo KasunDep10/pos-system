@@ -27,3 +27,47 @@ html[data-bs-theme="dark"] nav{
 main {
     flex-grow: 1;
 }
+
+main > section:first-child {
+    border-right: 1px solid lightgray;
+}
+
+.section {
+    width: 300px;
+    height: 180px;
+    background-color: #d0e7c8;
+    font-size: 2rem;
+    font-weight: bold;
+    font-style: italic;
+    margin-top: 20px;
+    border-radius: 20px;
+    box-shadow: 7px 6px 8px 7px #480d3f;
+}
+
+#items-customers > section:first-child {
+    background-color: #d0e7c8;
+}
+
+#items-customers > section:nth-child(2) {
+    background-color: #dadfac;
+}
+
+#items-customers > section:nth-child(3) {
+    background-color: #9ed5e0;
+}
+
+#summery {
+    width: 100%;
+    height: 40%;
+    background-color: #cbd56e;
+    border-radius: 20px;
+    box-shadow: 2px 2px 6px 2px #480d3f;
+}
+
+#summery > div {
+    font-size: 2rem;
+    font-weight: bold;
+    font-style: italic;
+    width: 90%;
+    height: 75%;
+}

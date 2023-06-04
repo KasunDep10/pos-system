@@ -1,5 +1,6 @@
 package lk.ijse.dep10.pos.api;
 
+import lk.ijse.dep10.pos.dto.IncomeDTO;
 import lk.ijse.dep10.pos.dto.ItemDTO;
 import lk.ijse.dep10.pos.dto.ResponseErrorDTO;
 import lk.ijse.dep10.pos.dto.SearchDTO;
@@ -21,6 +22,32 @@ public class SearchOrderController {
 
     @Autowired
     private BasicDataSource pool;
+
+
+    @GetMapping("/income/{date}")
+    public ResponseEntity<?> getTodayIncome(@PathVariable String date){
+        try(Connection connection = pool.getConnection()) {
+            PreparedStatement stm = connection.prepareStatement("SELECT * FROM `order` INNER JOIN order_details od on `order`.id = od.order_id WHERE datetime LIKE ?");
+            date = "%" + date + "%";
+            stm.setString(1, date);
+            ResultSet rst = stm.executeQuery();
+            BigDecimal total = BigDecimal.valueOf(0);
+            while(rst.next()){
+                int qty = rst.getInt("qty");
+                BigDecimal price = rst.getBigDecimal("unit_price").setScale(2);
+                total = total.add(new BigDecimal(qty).multiply(price));
+                System.out.println("total = " +total);
+            }
+            IncomeDTO incomeDTO = new IncomeDTO(total);
+            return new ResponseEntity<>(incomeDTO, HttpStatus.OK);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            ResponseErrorDTO error = new ResponseErrorDTO(404, "Order details not found");
+            return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 
     @GetMapping("/{orderId}")
     public ResponseEntity<?> getItem(@PathVariable String orderId){
