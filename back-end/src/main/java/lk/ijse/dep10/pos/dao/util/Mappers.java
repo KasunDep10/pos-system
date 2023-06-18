@@ -1,6 +1,7 @@
 package lk.ijse.dep10.pos.dao.util;
 
 import lk.ijse.dep10.pos.dto.OrderDTO2;
+import lk.ijse.dep10.pos.entity.*;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
