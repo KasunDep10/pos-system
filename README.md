@@ -78,3 +78,25 @@ Copyright &copy; 2023. All Rights Reserved.
 ## Contact
 
 For any inquiries or support, please contact [Kasun Chathuranga](mailto:kasunchathuranga3732@gmail.com).
+
+
+## Screen Shots
+### Dashboard
+![Alt Text](./images/dash-board-1.png)
+![Alt Text](./images/dash-board-2.png)
+
+### Manage Customers
+![Alt Text](./images/manage-customers.png)
+
+### Manage Items
+![Alt Text](./images/manage-items.png)
+
+### Place order
+![Alt Text](./images/place-order-1.png)
+![Alt Text](./images/place-order-2.png)
+
+### Search order
+![Alt Text](./images/search-Order.png)
+
+
+
