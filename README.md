@@ -83,6 +83,7 @@ For any inquiries or support, please contact [Kasun Chathuranga](mailto:kasuncha
 ## Screen Shots
 ### Dashboard
 ![Alt Text](./images/dash-board-1.png)
+
 ![Alt Text](./images/dash-board-2.png)
 
 ### Manage Customers
@@ -93,10 +94,14 @@ For any inquiries or support, please contact [Kasun Chathuranga](mailto:kasuncha
 
 ### Place order
 ![Alt Text](./images/place-order-1.png)
+
 ![Alt Text](./images/place-order-2.png)
 
 ### Search order
 ![Alt Text](./images/search-Order.png)
+
+### API Documentation
+![Alt Text](./images/API-documentation.png)
 
 
 
