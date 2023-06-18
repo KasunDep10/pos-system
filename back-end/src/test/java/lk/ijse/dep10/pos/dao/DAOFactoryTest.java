@@ -1,14 +1,11 @@
-package pos.dao;
+package lk.ijse.dep10.pos.dao;
 
-import lk.ijse.dep10.pos.dao.DAOFactory;
-import lk.ijse.dep10.pos.dao.DAOType;
 import lk.ijse.dep10.pos.dao.custom.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 class DAOFactoryTest {
 

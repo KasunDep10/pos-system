@@ -18,7 +18,7 @@
         </encoder>
     </appender>
 
-    <logger name="pos.system" level="DEBUG" />
+    <logger name="lk.ijse.dep10.pos" level="DEBUG" />
 
     <root level="INFO">
         <appender-ref ref="STDOUT"/>

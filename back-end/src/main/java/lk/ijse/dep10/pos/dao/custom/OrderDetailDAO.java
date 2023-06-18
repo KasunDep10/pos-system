@@ -1,6 +1,8 @@
 package lk.ijse.dep10.pos.dao.custom;
 
 import lk.ijse.dep10.pos.dao.CrudDAO;
+import lk.ijse.dep10.pos.dto.OrderDTO;
+import lk.ijse.dep10.pos.entity.Item;
 import lk.ijse.dep10.pos.entity.OrderDetail;
 import lk.ijse.dep10.pos.entity.OrderDetailPK;
 

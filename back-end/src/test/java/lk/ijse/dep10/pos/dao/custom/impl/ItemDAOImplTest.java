@@ -1,4 +1,4 @@
-package pos.dao.custom.impl;
+package lk.ijse.dep10.pos.dao.custom.impl;
 
 import com.github.javafaker.Faker;
 import lk.ijse.dep10.pos.TestConfig;

@@ -62,5 +62,4 @@ public class JdbcTemplate {
         kh.getKeys().put("1", key);
         return affectedRows;
     }
-
 }

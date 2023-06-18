@@ -14,18 +14,17 @@ public class WebSocketConfig implements WebSocketConfigurer {
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(customerWSHandler(), "/customers-ws").setAllowedOrigins("*");
+        registry.addHandler(customerWSHandler(), "api/v1/customers-ws")
+                .setAllowedOrigins("*");
     }
 
     @Bean
-    public CustomerWSHandler customerWSHandler(){
+    public CustomerWSHandler customerWSHandler() {
         return new CustomerWSHandler();
     }
 
     @Bean
-    public ObjectMapper objectMapper(){
+    public ObjectMapper objectMapper() {
         return new ObjectMapper();
     }
-
-
 }

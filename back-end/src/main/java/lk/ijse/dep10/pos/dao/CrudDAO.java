@@ -3,6 +3,7 @@ package lk.ijse.dep10.pos.dao;
 import lk.ijse.dep10.pos.entity.SuperEntity;
 
 import java.io.Serializable;
+import java.sql.Connection;
 import java.util.List;
 import java.util.Optional;
 

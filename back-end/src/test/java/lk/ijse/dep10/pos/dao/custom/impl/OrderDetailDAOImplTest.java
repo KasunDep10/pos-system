@@ -1,4 +1,4 @@
-package pos.dao.custom.impl;
+package lk.ijse.dep10.pos.dao.custom.impl;
 
 import lk.ijse.dep10.pos.TestConfig;
 import lk.ijse.dep10.pos.dao.DAOFactory;
@@ -7,6 +7,8 @@ import lk.ijse.dep10.pos.dao.custom.OrderDetailDAO;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
@@ -14,8 +16,7 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringJUnitConfig(classes = TestConfig.class)
 class OrderDetailDAOImplTest {
