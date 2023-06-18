@@ -3,7 +3,6 @@ package lk.ijse.dep10.pos.api;
 import lk.ijse.dep10.pos.business.BOFactory;
 import lk.ijse.dep10.pos.business.BOType;
 import lk.ijse.dep10.pos.business.custom.OrderBO;
-import lk.ijse.dep10.pos.dto.ItemDTO;
 import lk.ijse.dep10.pos.dto.OrderDTO;
 import lk.ijse.dep10.pos.dto.OrderDTO2;
 import lk.ijse.dep10.pos.dto.OrderDetailDTO;
@@ -14,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @RequestMapping("/api/v1/orders")

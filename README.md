@@ -31,8 +31,21 @@ This is a Point of Sale (POS) system web application that allows users to manage
 - Spring Web Socket
 - Apache DBCP
 - Lombok
+- Junit jupiter
+- Model mapper
+- Hibernate validator
+- Logging
+  - Slf4J
+  - Logback
 - Jackson
     - Jackson datatype
+- Swagger UI for API documentation
+- Layered Architecture
+- DAO design pattern
+- SOLID Principles
+- Facade design pattern
+- Factory design pattern
+- Servant design pattern
 
 ### Database
 - MySQL
@@ -64,4 +77,4 @@ Copyright &copy; 2023. All Rights Reserved.
 
 ## Contact
 
-For any inquiries or support, please contact [Kasun Chathuranga](kasunchathuranga3732@gmail.com).
+For any inquiries or support, please contact [Kasun Chathuranga](mailto:kasunchathuranga3732@gmail.com).
