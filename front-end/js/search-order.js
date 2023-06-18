@@ -2,6 +2,7 @@ import {showToast} from "./main.js";
 import {formatPrice, formatNumber} from "./place-order.js";
 import {Big} from '../node_modules/big.js/big.mjs';
 
+const REST_API_BASE_URL = 'http://localhost:8080/pos/api/v1';
 const orderTbodyElm = $('#tbl-order tbody');
 const ODTbodyElm = $('#tbl-order-detail tbody');
 const txtSearch = $('#txt-search');
@@ -14,7 +15,7 @@ txtSearch.on('input', ()=> getOrders());
 
 orderTbodyElm.on('click', '.view-order', (eventData)=>{
     const orderId = +$(eventData.target).parents("tr").children("td:first-child").text()
-        .replace("OD-","");
+        .replace("OD","");
 
     const xhr = new XMLHttpRequest();
 
@@ -24,24 +25,25 @@ orderTbodyElm.on('click', '.view-order', (eventData)=>{
             if (xhr.status === 200){
                 ODTbodyElm.empty();
                 const itemList = JSON.parse(xhr.responseText);
+                console.log(itemList);
                 itemList.forEach(item => {
                     ODTbodyElm.append(`
                     <tr>
                         <td>
-                            ${item.code}
+                            ${item.itemCode}
                         </td>
                         <td>
                             ${item.qty}
                         </td>
                         <td>
-                            ${formatNumber(item.price)}
+                            ${formatNumber(item.unitPrice)}
                         </td>
                         <td>
-                            ${formatNumber(Big(item.price).times(Big(item.qty)))}
+                            ${formatNumber(Big(item.unitPrice).times(Big(item.qty)))}
                         </td>
                     </tr>
                     `);
-                    total += +Big(item.price).times(Big(item.qty));
+                    total += +Big(item.unitPrice).times(Big(item.qty));
                 });
 
                 totalElm.text(formatPrice(total));
@@ -62,7 +64,7 @@ orderTbodyElm.on('click', '.view-order', (eventData)=>{
     });
 
 
-    xhr.open('GET', `http://localhost:8080/pos/searchOrder/${orderId}`, true);
+    xhr.open('GET', `${REST_API_BASE_URL}/orders/${orderId}`, true);
 
     const tfoot = $('#tbl-order-detail tfoot tr td:first-child');
     xhr.addEventListener('loadstart', ()=> tfoot.text('Please wait!'));
@@ -85,13 +87,17 @@ function getOrders(){
                 orderTbodyElm.empty();
                 const orderList = JSON.parse(xhr.responseText);
                 orderList.forEach(order => {
+                    const name = order.customerName === null? '-': order.customerName;
                     orderTbodyElm.append(`
                     <tr>
                         <td>
-                            OD-${order.id.toString().padStart(3, '0')}
+                            ${order.orderId}
                         </td>
                         <td>
-                            ${order.dateTime}
+                            ${name}
+                        </td>
+                        <td>
+                            ${order.orderDate}
                         </td>
                         <td>
                             <div class="actions d-flex justify-content-center align-items-center p-1">
@@ -123,7 +129,7 @@ function getOrders(){
     const searchText = txtSearch.val().trim().replace("OD-", "");
     const query = (searchText) ? `?q=${searchText}`: "";
 
-    xhr.open('GET', 'http://localhost:8080/pos/searchOrder' + query, true);
+    xhr.open('GET', `${REST_API_BASE_URL}/orders` + query, true);
 
     const tfoot = $('#tbl-order tfoot tr td:first-child');
     xhr.addEventListener('loadstart', ()=> tfoot.text('Please wait!'));

@@ -36,7 +36,6 @@ public class SearchOrderController {
                 int qty = rst.getInt("qty");
                 BigDecimal price = rst.getBigDecimal("unit_price").setScale(2);
                 total = total.add(new BigDecimal(qty).multiply(price));
-                System.out.println("total = " +total);
             }
             IncomeDTO incomeDTO = new IncomeDTO(total);
             return new ResponseEntity<>(incomeDTO, HttpStatus.OK);
@@ -73,7 +72,7 @@ public class SearchOrderController {
 
 
     @GetMapping
-    public ResponseEntity<?> getItems(@RequestParam(value = "q", required = false) String query) {
+    public ResponseEntity<?> getOrders(@RequestParam(value = "q", required = false) String query) {
         if (query == null) query = "";
         try (Connection connection = pool.getConnection()) {
             PreparedStatement stm = connection.prepareStatement

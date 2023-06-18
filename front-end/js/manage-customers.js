@@ -1,5 +1,6 @@
 import {showProgress, showToast} from "./main.js";
 
+const API_BASE_URL = "http://localhost:8080/pos/api/v1/";
 const tbodyElm = $('#tbl-customers tbody');
 const modalElm = $('#new-customer-modal');
 const txtId = $('#txt-id');
@@ -49,7 +50,7 @@ tbodyElm.on('click', ".delete", (eventData)=> {
     /* XHR -> jQuery AJAX */
     const id = +$(eventData.target).parents("tr").children("td:first-child").text().replace('C', '');
     const xhr = new XMLHttpRequest();
-    const jqxhr = $.ajax(`http://localhost:8080/pos/customers/${id}`, {
+    const jqxhr = $.ajax(`${API_BASE_URL}customers/${id}`, {
         method: 'DELETE',
         xhr: ()=> xhr           // This is a hack to obtain the xhr that is used by jquery
     });
@@ -60,8 +61,11 @@ tbodyElm.on('click', ".delete", (eventData)=> {
         $(eventData.target).tooltip('dispose');
         getCustomers();
     });
-    jqxhr.fail(()=> {
-        showToast('error', 'Failed', "Failed to delete the customer, try again!");
+    jqxhr.fail((data)=> {
+        const errMsg = JSON.parse(JSON.stringify(data.responseJSON));
+        const msg = errMsg.message.replace(/(Code: \d{4}; )/, "");
+        // showToast('error', 'Failed', "Failed to delete the customer, try again!");
+        showToast('error', 'Failed', msg);
     });
 });
 
@@ -120,9 +124,9 @@ btnSave.on('click', ()=>{
 
     /* 3. Let's open the request*/
     if(btnSave.text() === "Save Customer"){
-        xhr.open('POST', 'http://localhost:8080/pos/customers', true);
+        xhr.open('POST', `${API_BASE_URL}customers`, true);
     } else {
-        xhr.open('PATCH', `http://localhost:8080/pos/customers/${id}`, true);
+        xhr.open('PATCH', `${API_BASE_URL}customers/${id}`, true);
 
     }
 
@@ -247,7 +251,7 @@ function getCustomers(){
     const searchText = txtSearch.val().trim();
     const query = (searchText) ? `?q=${searchText}`: "";
 
-    xhr.open('GET', 'http://localhost:8080/pos/customers' + query, true);
+    xhr.open('GET', `${API_BASE_URL}customers` + query, true);
 
     const tfoot = $('#tbl-customers tfoot tr td:first-child');
     xhr.addEventListener('loadstart', ()=> tfoot.text('Please wait!'));

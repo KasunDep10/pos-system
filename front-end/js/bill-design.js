@@ -22,7 +22,7 @@ export function getBillDesignHTML(cart, orderId) {
                   d="M10.5 3.5a2.5 2.5 0 0 0-5 0V4h5v-.5zm1 0V4H15v10a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V4h3.5v-.5a3.5 3.5 0 1 1 7 0zm-.646 5.354a.5.5 0 0 0-.708-.708L7.5 10.793 6.354 9.646a.5.5 0 1 0-.708.708l1.5 1.5a.5.5 0 0 0 .708 0l3-3z" />
         </svg>
         <h2 class="my-0">POS System</h2>
-        <small>dep10@ijse.lk</small>
+        <small>kasunchathuranga3732@gmail.com</small>
     </div>
     <div id="bill-details" class="p-2 border-bottom text-center">
         <div><span class="fw-bold">Order ID:</span> OD${orderId.toString().padStart(3, '0')}</div>
@@ -78,8 +78,8 @@ function generateRows(cart){
                 <td></td>
                 <td></td>
                 <td>${item.qty}</td>
-                <td>${formatNumber(item.price)}</td>
-                <td>${formatNumber(Big(item.qty).times(Big(item.price)))}</td>
+                <td>${formatNumber(item.unitPrice)}</td>
+                <td>${formatNumber(Big(item.qty).times(Big(item.unitPrice)))}</td>
             </tr>`;
     });
     return html;

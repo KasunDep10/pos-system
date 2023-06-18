@@ -8,6 +8,42 @@ main > section:first-child {
     background-color: white;
 }
 
+#tbl-order-detail thead th:first-child,
+#tbl-order-detail tbody td:first-child {
+    width: 50px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+#tbl-order thead th:nth-child(2),
+#tbl-order tbody td:nth-child(2) {
+    width: 200px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+#tbl-order thead th:nth-child(3),
+#tbl-order tbody td:nth-child(3) {
+    width: 230px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+#tbl-order thead th:nth-child(4),
+#tbl-order tbody td:nth-child(4) {
+    width: 80px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+
+#tbl-order-detail thead th:first-child,
+#tbl-order-detail tbody td:first-child {
+    width: 200px;
+    text-align: center;
+    vertical-align: middle;
+}
+
 #tbl-order-detail thead th:nth-child(2),
 #tbl-order-detail tbody td:nth-child(2) {
     width: 70px;
@@ -17,14 +53,14 @@ main > section:first-child {
 
 #tbl-order-detail thead th:nth-child(3),
 #tbl-order-detail tbody td:nth-child(3) {
-    width: 120px;
+    width: 100px;
     text-align: center;
     vertical-align: middle;
 }
 
 #tbl-order-detail thead th:nth-child(4),
 #tbl-order-detail tbody td:nth-child(4) {
-    width: 130px;
+    width: 100px;
     text-align: right;
     vertical-align: middle;
 }

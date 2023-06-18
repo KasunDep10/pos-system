@@ -6,7 +6,7 @@ import {getBillDesignHTML} from "./bill-design.js";
 
 /* Module Level Variables, Constants */
 
-const REST_API_BASE_URL = 'http://localhost:8080/pos';
+const REST_API_BASE_URL = 'http://localhost:8080/pos/api/v1';
 const WS_API_BASE_URL = 'ws://localhost:8080/pos';
 const orderDateTimeElm = $("#order-date-time");
 const tbodyElm = $("#tbl-order tbody");
@@ -29,7 +29,7 @@ let cart = new Cart((total)=> netTotalElm.text(formatPrice(total)));
 /* Initialization Logic */
 setDateTime();
 tbodyElm.empty();
-socket = new WebSocket(`${WS_API_BASE_URL}/customers-ws`);
+socket = new WebSocket(`${WS_API_BASE_URL}/api/v1/customers-ws`);
 updateOrderDetails();
 
 
@@ -187,10 +187,10 @@ function addItemToTable(item) {
                         ${item.qty}
                     </td>
                     <td>
-                        ${formatNumber(item.price)}
+                        ${formatNumber(item.unitPrice)}
                     </td>
                     <td>
-                        ${formatNumber(Big(item.price).times(Big(item.qty)))}
+                        ${formatNumber(Big(item.unitPrice).times(Big(item.qty)))}
                     </td>
                 </tr>`);
     tbodyElm.append(trElm);
@@ -224,7 +224,7 @@ function findItem() {
         }
         stock.text(item.qty ? `In Stock: ${item.qty}` : 'Out of Stock');
         !item.qty ? stock.addClass("out-of-stock") : stock.removeClass("out-of-stock");
-        unitPrice.text(formatPrice(item.price));
+        unitPrice.text(formatPrice(item.unitPrice));
         itemInfo.removeClass("d-none");
         if (item.qty) {
             frmOrder.removeClass("d-none");

@@ -1,12 +1,13 @@
 import {formatPrice} from "./place-order.js";
 import {showProgress, showToast} from "./main.js";
 
+const API_BASE_URL = "http://localhost:8080/pos/api/v1/";
 const tbodyElm = $('#tbl-items tbody');
 const modalElm = $('#new-item-modal');
 const txtCode = $('#txt-item-code');
 const txtDescription = $('#txt-description');
 const txtQty = $('#txt-qty');
-const txtPrice = $('#txt-price');
+const txtUnitPrice = $('#txt-price');
 const btnSave = $('#btn-save');
 const txtSearch = $('#txt-search');
 tbodyElm.empty();
@@ -22,7 +23,7 @@ modalElm.on('show.bs.modal', ()=>{
 getItems();
 txtSearch.on('input', ()=> getItems());
 
-[txtCode, txtDescription, txtPrice, txtQty].forEach(txtElm => $(txtElm).addClass('animate__animated'));
+[txtCode, txtDescription, txtUnitPrice, txtQty].forEach(txtElm => $(txtElm).addClass('animate__animated'));
 
 
 
@@ -40,7 +41,7 @@ tbodyElm.on('click', ".edit", (eventData)=> {
     setTimeout(()=>txtDescription.trigger('focus'),500)
     txtDescription.val(description);
     txtQty.val(qty);
-    txtPrice.val(price);
+    txtUnitPrice.val(price);
     btnSave.text('Update Item');
 });
 
@@ -55,12 +56,12 @@ btnSave.on('click', ()=>{
     }
 
     const qty = +txtQty.val().trim();
-    const price = +txtPrice.val().trim();
+    const unitPrice = +txtUnitPrice.val().trim();
     const description = txtDescription.val().trim();
     const code = txtCode.val().trim();
 
     let item = {
-        code, description, price, qty
+        code, description, unitPrice, qty
     };
     /* Todo: Send a request to the server to save the item*/
 
@@ -71,7 +72,7 @@ btnSave.on('click', ()=>{
     xhr.addEventListener('readystatechange', ()=>{
         if(xhr.readyState === 4){
 
-            [txtCode, txtDescription, txtQty, txtPrice, btnSave].forEach(txt => txt.removeAttr('disabled'));
+            [txtCode, txtDescription, txtQty, txtUnitPrice, btnSave].forEach(txt => txt.removeAttr('disabled'));
             $('#loader').css('visibility', 'hidden');
 
             if(xhr.status === 201) {
@@ -100,9 +101,9 @@ btnSave.on('click', ()=>{
 
     /* 3. Let's open the request*/
     if(btnSave.text() === "Save Item"){
-        xhr.open('POST', 'http://localhost:8080/pos/items', true);
+        xhr.open('POST', `${API_BASE_URL}items`, true);
     } else {
-        xhr.open('PATCH', `http://localhost:8080/pos/items/${code}`, true);
+        xhr.open('PATCH', `${API_BASE_URL}items/${code}`, true);
 
     }
 
@@ -114,7 +115,7 @@ btnSave.on('click', ()=>{
     /* 5. Okay time to send the request*/
     xhr.send(JSON.stringify(item));
 
-    [txtCode, txtDescription, txtQty, txtPrice, btnSave].forEach(txt => txt.attr('disabled', 'true'));
+    [txtCode, txtDescription, txtQty, txtUnitPrice, btnSave].forEach(txt => txt.attr('disabled', 'true'));
     $('#loader').css('visibility', 'visible');
 
 });
@@ -124,7 +125,7 @@ tbodyElm.on('click', ".delete", (eventData)=> {
     /* XHR -> jQuery AJAX */
     const code = +$(eventData.target).parents("tr").children("td:first-child").text();
     const xhr = new XMLHttpRequest();
-    const jqxhr = $.ajax(`http://localhost:8080/pos/items/${code}`, {
+    const jqxhr = $.ajax(`${API_BASE_URL}items/${code}`, {
         method: 'DELETE',
         xhr: ()=> xhr           // This is a hack to obtain the xhr that is used by jquery
     });
@@ -135,8 +136,11 @@ tbodyElm.on('click', ".delete", (eventData)=> {
         $(eventData.target).tooltip('dispose');
         getItems();
     });
-    jqxhr.fail(()=> {
-        showToast('error', 'Failed', "Failed to delete the item, try again!");
+    jqxhr.fail((data)=> {
+        const errMsg = JSON.parse(JSON.stringify(data.responseJSON));
+        const msg = errMsg.message.replace(/(Code: \d{4}; )/, "");
+        // showToast('error', 'Failed', "Failed to delete the item, try again!");
+        showToast('error', 'Failed', msg);
     });
 });
 
@@ -144,7 +148,7 @@ tbodyElm.on('click', ".delete", (eventData)=> {
 
 
 function validateData(){
-    const price = +txtPrice.val().trim();
+    const price = +txtUnitPrice.val().trim();
     const description = txtDescription.val().trim();
     const code = txtCode.val().trim();
     let valid = true;
@@ -152,10 +156,10 @@ function validateData(){
 
 
     if(!price){
-        valid = invalidate(txtPrice, "Price can't be empty")
+        valid = invalidate(txtUnitPrice, "Price can't be empty")
 
     } else if(price <= 0){
-        valid = invalidate(txtPrice, "Invalid Price")
+        valid = invalidate(txtUnitPrice, "Invalid Price")
     }
 
     if(!description){
@@ -184,7 +188,7 @@ function invalidate(txt, msg){
 
 
 function resetForm(clearData){
-    [txtCode, txtDescription, txtQty, txtPrice].forEach(txt => {
+    [txtCode, txtDescription, txtQty, txtUnitPrice].forEach(txt => {
         txt.removeClass('is-invalid animate__shakeX');
         if(clearData) txt.val('');
     })
@@ -208,7 +212,7 @@ function getItems(){
                     <tr>
                         <td class="text-center">${item.code}</td>
                         <td>${item.description}</td>
-                        <td class="d-none d-xl-table-cell">${formatPrice(item.price)}</td>
+                        <td class="d-none d-xl-table-cell">${formatPrice(item.unitPrice)}</td>
                         <td class="contact text-center">${item.qty}</td>
                         <td>
                             <div class="actions d-flex gap-3 justify-content-center">
@@ -252,7 +256,7 @@ function getItems(){
     const searchText = txtSearch.val().trim();
     const query = (searchText) ? `?q=${searchText}`: "";
 
-    xhr.open('GET', 'http://localhost:8080/pos/items' + query, true);
+    xhr.open('GET', `${API_BASE_URL}items/${query}`, true);
 
     const tfoot = $('#tbl-items tfoot tr td:first-child');
     xhr.addEventListener('loadstart', ()=> tfoot.text('Please wait!'));

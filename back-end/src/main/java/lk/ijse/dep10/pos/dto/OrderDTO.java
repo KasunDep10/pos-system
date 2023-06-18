@@ -13,8 +13,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderDTO {
-    CustomerDTO customer;
+    private CustomerDTO customer;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime dateTime;
-    List<ItemDTO> itemList = new ArrayList<>();
+    private List<ItemDTO> itemList = new ArrayList<>();
 }

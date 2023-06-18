@@ -36,6 +36,7 @@ This is a Point of Sale (POS) system web application that allows users to manage
 
 ### Database
 - MySQL
+- H2 database for testing
 
 ## Features
 
@@ -58,11 +59,8 @@ To get started with the POS system web application, follow these steps:
 
 ## License
 
-Copyright 2023 Kasun Chathuranga. All Rights Reserved.
+Copyright &copy; 2023. All Rights Reserved.
 
-## Acknowledgements
-
-Special thanks to the developers and contributors of the libraries, frameworks, and tools used in this POS system web application.
 
 ## Contact
 
