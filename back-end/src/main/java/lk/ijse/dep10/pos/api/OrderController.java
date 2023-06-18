@@ -44,8 +44,8 @@ public class OrderController {
             /* Let's save order items*/
             /* Let's update the stock*/
             PreparedStatement stmOrderItem = connection.prepareStatement
-                    ("INSERT INTO order_details (order_id, item_code, unit_price, qty) VALUES (?,?,?,?)");
-            PreparedStatement stmUpdateStock = connection.prepareStatement("UPDATE Item SET qty = qty - ? WHERE code = ?");
+                    ("INSERT INTO order_detail (order_id, item_code, unit_price, qty) VALUES (?,?,?,?)");
+            PreparedStatement stmUpdateStock = connection.prepareStatement("UPDATE item SET qty = qty - ? WHERE code = ?");
 
             for (ItemDTO orderItem : order.getItemList()) {
                 stmOrderItem.setInt(1, orderId);

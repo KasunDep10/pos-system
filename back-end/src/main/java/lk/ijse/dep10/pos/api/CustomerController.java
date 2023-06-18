@@ -26,7 +26,7 @@ public class CustomerController {
     public ResponseEntity<?> updateCustomer(@PathVariable("id") int customerId, @RequestBody CustomerDTO customer){
         try(Connection connection = pool.getConnection()) {
             PreparedStatement stm = connection.prepareStatement
-                    ("UPDATE Customer SET name=?, address=?, contact=? WHERE id=?");
+                    ("UPDATE customer SET name=?, address=?, contact=? WHERE id=?");
             stm.setString(1, customer.getName());
             stm.setString(2, customer.getAddress());
             stm.setString(3, customer.getContact());
@@ -56,7 +56,7 @@ public class CustomerController {
 //        System.out.println("delete " + customerId);
 
         try(Connection connection = pool.getConnection()) {
-            PreparedStatement stm = connection.prepareStatement("DELETE FROM Customer WHERE id=?");
+            PreparedStatement stm = connection.prepareStatement("DELETE FROM customer WHERE id=?");
             stm.setString(1, customerId);
             int affectedRows = stm.executeUpdate();
             if(affectedRows == 1){
@@ -91,7 +91,7 @@ public class CustomerController {
         if (query == null) query = "";
         try (Connection connection = pool.getConnection()) {
             PreparedStatement stm = connection.prepareStatement
-                    ("SELECT * FROM Customer WHERE id LIKE ? OR name LIKE ? OR address LIKE ? OR contact LIKE ?");
+                    ("SELECT * FROM customer WHERE id LIKE ? OR name LIKE ? OR address LIKE ? OR contact LIKE ?");
             query = "%" + query + "%";
             for (int i = 1; i <= 4; i++) {
                 stm.setString(i, query);
@@ -125,7 +125,7 @@ public class CustomerController {
         }
         try(Connection connection = pool.getConnection()) {
             PreparedStatement stm = connection.prepareStatement
-                    ("INSERT INTO Customer (name, address, contact) VALUES (?,?,?)",
+                    ("INSERT INTO customer (name, address, contact) VALUES (?,?,?)",
                             Statement.RETURN_GENERATED_KEYS);
             stm.setString(1, customer.getName());
             stm.setString(2, customer.getAddress());

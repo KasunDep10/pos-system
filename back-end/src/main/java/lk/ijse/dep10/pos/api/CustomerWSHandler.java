@@ -27,7 +27,7 @@ public class CustomerWSHandler extends TextWebSocketHandler {
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         try(Connection connection = pool.getConnection()){
             PreparedStatement stm = connection.prepareStatement
-                    ("SELECT * FROM Customer WHERE id=? OR contact=?");
+                    ("SELECT * FROM customer WHERE id=? OR contact=?");
             stm.setString(1, message.getPayload().strip());
             stm.setString(2, message.getPayload().strip());
             ResultSet rst = stm.executeQuery();

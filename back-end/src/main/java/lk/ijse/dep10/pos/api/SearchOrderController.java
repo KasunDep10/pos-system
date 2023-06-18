@@ -27,7 +27,7 @@ public class SearchOrderController {
     @GetMapping("/income/{date}")
     public ResponseEntity<?> getTodayIncome(@PathVariable String date){
         try(Connection connection = pool.getConnection()) {
-            PreparedStatement stm = connection.prepareStatement("SELECT * FROM `order` INNER JOIN order_details od on `order`.id = od.order_id WHERE datetime LIKE ?");
+            PreparedStatement stm = connection.prepareStatement("SELECT * FROM `order` INNER JOIN order_detail od on `order`.id = od.order_id WHERE datetime LIKE ?");
             date = "%" + date + "%";
             stm.setString(1, date);
             ResultSet rst = stm.executeQuery();
@@ -51,7 +51,7 @@ public class SearchOrderController {
     @GetMapping("/{orderId}")
     public ResponseEntity<?> getItem(@PathVariable String orderId){
         try(Connection connection = pool.getConnection()) {
-            PreparedStatement stm = connection.prepareStatement("SELECT * FROM order_details WHERE order_id=?");
+            PreparedStatement stm = connection.prepareStatement("SELECT * FROM order_detail WHERE order_id=?");
             stm.setString(1, orderId);
             ResultSet rst = stm.executeQuery();
             List<ItemDTO> itemList = new ArrayList<>();

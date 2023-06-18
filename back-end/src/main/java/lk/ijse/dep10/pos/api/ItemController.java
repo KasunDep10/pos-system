@@ -25,7 +25,7 @@ public class ItemController {
     @GetMapping("/{code}")
     public ResponseEntity<?> getItem(@PathVariable String code){
         try(Connection connection = pool.getConnection()) {
-            PreparedStatement stm = connection.prepareStatement("SELECT * FROM Item WHERE code=?");
+            PreparedStatement stm = connection.prepareStatement("SELECT * FROM item WHERE code=?");
             stm.setString(1, code);
             ResultSet rst = stm.executeQuery();
             if(rst.next()){
@@ -50,7 +50,7 @@ public class ItemController {
     public ResponseEntity<?> updateItem(@PathVariable("code") String itemCode, @RequestBody ItemDTO item){
         try(Connection connection = pool.getConnection()) {
             PreparedStatement stm = connection.prepareStatement
-                    ("UPDATE Item SET description=?, price=?, qty=? WHERE code=?");
+                    ("UPDATE item SET description=?, unit_price=?, qty=? WHERE code=?");
             stm.setString(1, item.getDescription());
             stm.setBigDecimal(2, item.getPrice());
             stm.setInt(3, item.getQty());
@@ -80,7 +80,7 @@ public class ItemController {
 //        System.out.println("delete " + itemCode);
 
         try(Connection connection = pool.getConnection()) {
-            PreparedStatement stm = connection.prepareStatement("DELETE FROM Item WHERE code=?");
+            PreparedStatement stm = connection.prepareStatement("DELETE FROM item WHERE code=?");
             stm.setString(1, itemCode);
             int affectedRows = stm.executeUpdate();
             if(affectedRows == 1){
@@ -111,7 +111,7 @@ public class ItemController {
         }*/
         try(Connection connection = pool.getConnection()) {
             PreparedStatement stm = connection.prepareStatement
-                    ("INSERT INTO Item (code, description, price, qty) VALUES (?,?,?,?)");
+                    ("INSERT INTO item (code, description, unit_price, qty) VALUES (?,?,?,?)");
             stm.setString(1, item.getCode());
             stm.setString(2, item.getDescription());
             stm.setBigDecimal(3, item.getPrice());
@@ -138,7 +138,7 @@ public class ItemController {
         if (query == null) query = "";
         try (Connection connection = pool.getConnection()) {
             PreparedStatement stm = connection.prepareStatement
-                    ("SELECT * FROM Item WHERE code LIKE ? OR description LIKE ? OR price LIKE ? OR qty LIKE ?");
+                    ("SELECT * FROM item WHERE code LIKE ? OR description LIKE ? OR unit_price LIKE ? OR qty LIKE ?");
             query = "%" + query + "%";
             for (int i = 1; i <= 4; i++) {
                 stm.setString(i, query);
