@@ -7,7 +7,7 @@ import java.sql.Connection;
 import java.util.List;
 import java.util.Optional;
 
-public interface CrudDAO<T extends SuperEntity, ID extends Serializable> extends SuperDAO{
+public interface CrudDAO<T extends SuperEntity, ID extends Serializable> {
 
     long count() throws Exception;
 
