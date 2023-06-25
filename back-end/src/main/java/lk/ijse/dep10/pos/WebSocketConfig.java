@@ -8,7 +8,6 @@ import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
 
-@EnableWebSocket
 @Configuration
 public class WebSocketConfig implements WebSocketConfigurer {
 
@@ -23,8 +22,4 @@ public class WebSocketConfig implements WebSocketConfigurer {
         return new CustomerWSHandler();
     }
 
-    @Bean
-    public ObjectMapper objectMapper() {
-        return new ObjectMapper();
-    }
 }
