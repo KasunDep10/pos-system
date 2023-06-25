@@ -29,6 +29,9 @@ This is a Point of Sale (POS) system web application that allows users to manage
 - Java SE 11
 - Spring Framework (Spring Web MVC)
 - Spring Web Socket
+- Spring Core
+- Spring Jdbc
+- Spring Boot
 - Apache DBCP
 - Lombok
 - Junit jupiter
