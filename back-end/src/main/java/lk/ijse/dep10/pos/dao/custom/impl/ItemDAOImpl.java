@@ -3,13 +3,16 @@ package lk.ijse.dep10.pos.dao.custom.impl;
 import lk.ijse.dep10.pos.dao.custom.ItemDAO;
 import lk.ijse.dep10.pos.dao.util.JdbcTemplate;
 import lk.ijse.dep10.pos.entity.Item;
+import org.springframework.stereotype.Component;
 
 import java.sql.Connection;
 import java.util.List;
 import java.util.Optional;
 
+
 import static lk.ijse.dep10.pos.dao.util.Mappers.ITEM_ROW_MAPPER;
 
+@Component
 public class ItemDAOImpl implements ItemDAO {
 
     private JdbcTemplate jdbcTemplate;

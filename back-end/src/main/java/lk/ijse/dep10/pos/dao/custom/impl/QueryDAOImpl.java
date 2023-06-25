@@ -3,6 +3,7 @@ package lk.ijse.dep10.pos.dao.custom.impl;
 import lk.ijse.dep10.pos.dao.custom.QueryDAO;
 import lk.ijse.dep10.pos.dao.util.JdbcTemplate;
 import lk.ijse.dep10.pos.dto.OrderDTO2;
+import org.springframework.stereotype.Component;
 
 import java.sql.Connection;
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.stream.Collectors;
 
 import static lk.ijse.dep10.pos.dao.util.Mappers.ORDER_DTO_2_ROW_MAPPER;
 
+@Component
 public class QueryDAOImpl implements QueryDAO {
 
     private JdbcTemplate jdbcTemplate;

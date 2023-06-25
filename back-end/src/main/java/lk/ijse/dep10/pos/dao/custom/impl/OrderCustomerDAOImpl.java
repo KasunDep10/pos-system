@@ -3,6 +3,7 @@ package lk.ijse.dep10.pos.dao.custom.impl;
 import lk.ijse.dep10.pos.dao.custom.OrderCustomerDAO;
 import lk.ijse.dep10.pos.dao.util.JdbcTemplate;
 import lk.ijse.dep10.pos.entity.OrderCustomer;
+import org.springframework.stereotype.Component;
 
 import java.sql.Connection;
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.Optional;
 
 import static lk.ijse.dep10.pos.dao.util.Mappers.ORDER_CUSTOMER_ROW_MAPPER;
 
+@Component
 public class OrderCustomerDAOImpl implements OrderCustomerDAO {
 
     private JdbcTemplate jdbcTemplate;

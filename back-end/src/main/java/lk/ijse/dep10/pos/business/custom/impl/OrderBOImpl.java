@@ -4,8 +4,6 @@ import lk.ijse.dep10.pos.business.custom.OrderBO;
 import lk.ijse.dep10.pos.business.exception.BusinessException;
 import lk.ijse.dep10.pos.business.exception.BusinessExceptionType;
 import lk.ijse.dep10.pos.business.util.Transformer;
-import lk.ijse.dep10.pos.dao.DAOFactory;
-import lk.ijse.dep10.pos.dao.DAOType;
 import lk.ijse.dep10.pos.dao.custom.*;
 import lk.ijse.dep10.pos.dto.ItemDTO;
 import lk.ijse.dep10.pos.dto.OrderDTO;
@@ -15,6 +13,7 @@ import lk.ijse.dep10.pos.entity.Item;
 import lk.ijse.dep10.pos.entity.Order;
 import lk.ijse.dep10.pos.entity.OrderCustomer;
 import lk.ijse.dep10.pos.entity.OrderDetail;
+import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -22,19 +21,29 @@ import java.sql.Timestamp;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Component
 public class OrderBOImpl implements OrderBO {
 
     private final DataSource dataSource;
-    private final OrderDAO orderDAO = DAOFactory.getInstance().getDAO(DAOType.ORDER);
-    private final OrderDetailDAO orderDetailDAO = DAOFactory.getInstance().getDAO(DAOType.ORDER_DETAIL);
-    private final ItemDAO itemDAO = DAOFactory.getInstance().getDAO(DAOType.ITEM);
-    private final CustomerDAO customerDAO = DAOFactory.getInstance().getDAO(DAOType.CUSTOMER);
-    private final OrderCustomerDAO orderCustomerDAO = DAOFactory.getInstance().getDAO(DAOType.ORDER_CUSTOMER);
-    private final QueryDAO queryDAO = DAOFactory.getInstance().getDAO(DAOType.QUERY);
-    private final Transformer transformer = new Transformer();
+    private final OrderDAO orderDAO;
+    private final OrderDetailDAO orderDetailDAO;
+    private final ItemDAO itemDAO;
+    private final CustomerDAO customerDAO;
+    private final OrderCustomerDAO orderCustomerDAO;
+    private final QueryDAO queryDAO;
+    private final Transformer transformer;
 
-    public OrderBOImpl(DataSource dataSource) {
+    public OrderBOImpl(DataSource dataSource, OrderDAO orderDAO, OrderDetailDAO orderDetailDAO,
+                       ItemDAO itemDAO, CustomerDAO customerDAO,
+                       OrderCustomerDAO orderCustomerDAO, QueryDAO queryDAO, Transformer transformer) {
         this.dataSource = dataSource;
+        this.orderDAO = orderDAO;
+        this.orderDetailDAO = orderDetailDAO;
+        this.itemDAO = itemDAO;
+        this.customerDAO = customerDAO;
+        this.orderCustomerDAO = orderCustomerDAO;
+        this.queryDAO = queryDAO;
+        this.transformer = transformer;
     }
 
     @Override
