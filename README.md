@@ -68,7 +68,7 @@ This is a Point of Sale (POS) system web application that allows users to manage
 
 To get started with the POS system web application, follow these steps:
 
-1. Clone the repository: `git clone https://github.com/KasunChathuranga3732/pos-system.git`
+1. Clone the repository: `git clone https://github.com/KasunDep10/pos-system.git`
 2. Set up the necessary configurations for the front-end and back-end technologies.
 3. Install the required dependencies and libraries.
 4. Build and deploy the application.
